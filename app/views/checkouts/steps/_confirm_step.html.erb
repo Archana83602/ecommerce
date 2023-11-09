@@ -1,0 +1,47 @@
+<div class="confirm-step">
+  <fieldset class="confirm-step__info">
+    <legend>
+      <%= t('spree.confirm') %>
+    </legend>
+
+    <%= render 'orders/order_details', order: @order %>
+  </fieldset>
+
+  <div class="terms_and_conditions">
+
+    <%= check_box_tag :accept_terms_and_conditions, 'accepted', false %>
+    <%= label_tag :accept_terms_and_conditions, t('spree.agree_to_terms_of_service') %>
+    <br>
+    <a href="#" id="know_more_link" style="color: blue; font-weight: normal; text-transform: none;">know more</a>
+    <div id="terms_and_conditions_content" style="display: none;">
+      <%= render 'checkouts/terms_and_conditions' %>
+    </div>
+  </div>
+ 
+
+  <%= button_tag(
+    I18n.t('spree.place_order'),
+    class: 'button-primary',
+    name: :commit,
+  ) %>
+</div>
+
+<script>
+  Solidus.disableSaveOnClick();
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Handle click event on the "Know More" link
+    $('#know_more_link').on('click', function(e) {
+      e.preventDefault(); // Prevent the default link behavior
+
+      // Toggle the visibility of the terms and conditions content
+      $('#terms_and_conditions_content').toggle();
+
+       var linkText = $(this).text();
+      $(this).text(linkText === 'know more' ? 'Less' : 'know more');
+    });
+  });
+</script>

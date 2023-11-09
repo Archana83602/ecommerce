@@ -1,0 +1,12 @@
+.hero {
+  // background-image:  url('design.png') ;
+  // background-size: cover; /* Adjust this property based on your design needs */
+  // background-position: center center; /* Adjust this property based on your design needs */
+  // color: $color-copy-bright;
+  // padding: 10rem 0;
+
+  &__container {
+    @extend %section-spacings;
+    display: flex;
+  }
+}

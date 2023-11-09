@@ -1,0 +1,103 @@
+<% variant = line_item.variant %>
+
+<%= order_form.fields_for :line_items, line_item do |item_form| %>
+  <article class="cart-item">
+    <div class="cart-item__image">
+      <%= link_to(
+        render(ImageComponent.new(
+          image: variant.gallery.images.first || variant.product.gallery.images.first,
+          size: :small
+        )),
+        variant.product
+      ) %>
+    </div>
+
+    <%= render(
+      'orders/item_info',
+      line_item: line_item,
+      variant: variant,
+      classes: ['cart-item__info']
+    ) %>
+
+    <div class="cart-item__price-single">
+      <%= line_item.single_money.to_html %>
+    </div>
+
+    <div class="cart-item__quantity">
+      <div class="text-input">
+        <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+        <%= item_form.text_field :quantity, min: 0, id: 'number', readonly: true %>
+        <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+      </div>
+    </div>
+    
+
+ <%= form_for(@order, url: cart_path, method: :put, remote: false) do |f| %>
+      <%= f.hidden_field :authenticity_token, value: form_authenticity_token %>
+      <%= f.hidden_field :id, value: item_form.object.id %>
+      <%= f.hidden_field :quantity, value: item_form.object.quantity %>
+      <%= f.submit style: 'display:none', id: 'update-cart-button' %>
+    <% end %>  
+
+
+
+    <div class="cart-item__price">
+      <strong><%= line_item.display_amount.to_html unless line_item.quantity.nil? %></strong>
+    </div>
+
+    <div class="cart-item__remove">
+      <%= order_form.submit(
+        'Remove',
+        class: 'delete',
+        id: "delete_#{dom_id(line_item)}",
+        data: { disable_with: 'Remove' },
+        'data-action': 'click->cart-page#setQuantityToZero',
+        # FIXME: `index: nil` is required because otherwise rails will double the index
+        'data-cart-page-quantity-id-param': item_form.field_id(:quantity, index: nil),
+      ) %>
+    </div>
+  </article>
+<% end %>
+<script>
+// function increaseValue() {
+//   var value = parseInt(document.getElementById('number').value, 10);
+//   value = isNaN(value) ? 0 : value;
+//   value++;
+//   document.getElementById('number').value = value;
+// }
+
+// function decreaseValue() {
+//   var value = parseInt(document.getElementById('number').value, 10);
+//   value = isNaN(value) ? 0 : value;
+//   value < 1 ? value = 1 : '';
+//   value--;
+//   document.getElementById('number').value = value;
+// }
+</script>
+<script type="text/javascript">
+   function increaseValue() {
+    var newValue = parseInt($('#number').val()) + 1;
+    var maxStock = <%= @order.line_items.first.variant.stock_items.sum(:count_on_hand) %>;
+
+    if (newValue <= maxStock) {
+      $('#number').val(newValue);
+      submitCartForm();
+    } else {
+      alert('Not enough stock available.');
+    }
+  }
+
+
+  function decreaseValue() {
+    var newValue = parseInt($('#number').val()) - 1;
+    if (newValue >= 0) {
+      $('#number').val(newValue);
+      submitCartForm();
+    }
+  }
+
+  function submitCartForm() {
+    $('#update-cart-button').click();
+  }
+</script>
+

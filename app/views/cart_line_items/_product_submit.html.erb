@@ -1,0 +1,46 @@
+<div class="product-submit">
+  <%= render 'cart_line_items/product_availability', product: product %>
+
+  <div class="horizontal-input-group">
+    <div class="horizontal-input-group__input">
+      <div class="text-input">
+        <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+        <%= text_field_tag :quantity, 1,  min: 1  ,id: 'number', readonly: true%>
+        <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+      </div>
+    </div>
+    <div class="horizontal-input-group__action">
+      <%= button_tag(
+        t('spree.add_to_cart'),
+        class: 'button-primary',
+        id: 'add-to-cart-button'
+      ) %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    const quantityInput = document.querySelector('input[name="quantity"]');
+    
+    quantityInput.addEventListener("input", function() {
+      if (parseInt(this.value) > 100) {
+        this.value = 100; // Set the value to 100 if it's greater than 100
+      }
+    });
+  });
+
+function increaseValue() {
+  var value = parseInt(document.getElementById('number').value, 10);
+  value = isNaN(value) ? 0 : value;
+  value++;
+  document.getElementById('number').value = value;
+}
+
+function decreaseValue() {
+  var value = parseInt(document.getElementById('number').value, 10);
+  value = isNaN(value) ? 0 : value;
+  value < 1 ? value = 1 : '';
+  value--;
+  document.getElementById('number').value = value;
+}
+</script>
