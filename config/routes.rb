@@ -15,7 +15,13 @@ Rails.application.routes.draw do
     path_names: { sign_out: 'logout' }
   })
 
-  resources :users, only: [:edit, :update]
+  resources :users, only: [:edit, :update] do
+    resource :address, only: [:edit, :update], controller: 'addresses'
+    member do
+      put 'update_addresses'
+    end
+  end
+
 
   devise_scope :spree_user do
     get '/login', to: 'user_sessions#new', as: :login
@@ -50,9 +56,14 @@ Rails.application.routes.draw do
   get '/checkout', to: 'checkouts#edit', as: :checkout
 
   get '/orders/:id/token/:token' => 'orders#show', as: :token_order
+  
 
   resources :orders, only: :show do
     resources :coupon_codes, only: :create
+    member do
+      post 'cancel_order'
+      post 'return_order'
+    end
   end
 
   resource :cart, only: [:show, :update] do

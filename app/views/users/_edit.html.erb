@@ -1,0 +1,13 @@
+<!-- app/views/addresses/edit.html.erb -->
+
+<h2>Edit Address1</h2>
+
+<%= form_for [@user, :address], url: user_address_path(@user), method: :put do |f| %>
+  <!-- Add fields for editing the address -->
+  <%= f.label :firstname %>
+  <%= f.text_field :firstname %>
+
+  <!-- Add other fields as needed -->
+
+  <%= f.submit 'Update Address' %>
+<% end %>

@@ -115,16 +115,17 @@
   </div>
 
 
-  <div class="text-input">
-    <%= form.label :phone, "#{I18n.t("spree.phone")}:" %>
+<div class="text-input">
+  <%= form.label :phone, "#{I18n.t("spree.phone")}:" %>
+  <%= form.text_field :phone,
+    required: address.require_phone?,
+    autocomplete: "#{address_type} home tel",
+    maxlength: 10,
+    pattern: '\d{10}',
+    title: 'Please enter a 10-digit phone number'
+  %>
+</div>
 
-    <%= form.telephone_field :phone,
-      required: address.require_phone?,
-      autocomplete: "#{address_type} home tel",
-      pattern: '\d{10}',
-      title: 'Please enter a 10-digit phone number'
-    %>
-  </div>
 
 
   <% if Spree::Config[:alternative_shipping_phone] %>

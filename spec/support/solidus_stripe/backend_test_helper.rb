@@ -5,7 +5,8 @@ module SolidusStripe::BackendTestHelper
     @payment_method = create(
       :solidus_stripe_payment_method,
       preferred_setup_future_usage: setup_future_usage,
-      auto_capture: auto_capture
+      auto_capture: auto_capture,
+      description: "Payment for goods and services"
     )
   end
 

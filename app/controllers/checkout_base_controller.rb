@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class CheckoutBaseController < StoreController
   before_action :load_order
   around_action :lock_order
@@ -23,10 +22,6 @@ class CheckoutBaseController < StoreController
     redirect_to(cart_path) && return unless @order
   end
 
-  # Allow the customer to only go back or stay on the current state
-  # when trying to change it via params[:state]. It's not allowed to
-  # jump forward and skip states (unless #skip_state_validation? is
-  # truthy).
   def ensure_order_is_not_skipping_states
     if params[:state]
       redirect_to checkout_state_path(@order.state) if @order.can_go_to_state?(params[:state]) && !skip_state_validation?
@@ -47,6 +42,7 @@ class CheckoutBaseController < StoreController
   def ensure_sufficient_stock_lines
     if @order.insufficient_stock_lines.present?
       out_of_stock_items = @order.insufficient_stock_lines.collect(&:name).to_sentence
+      print(out_of_stock_items)
       flash[:error] = t('spree.inventory_error_flash_for_insufficient_quantity', names: out_of_stock_items)
       redirect_to cart_path
     end

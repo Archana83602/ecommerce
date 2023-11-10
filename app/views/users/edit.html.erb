@@ -1,32 +1,45 @@
-<article class="auth-container" id="edit-account">
-  <h1><%= I18n.t('spree.editing_user') %></h1>
+<!-- app/views/users/_edit.html.erb -->
 
-  <%= render 'shared/error_messages', target: @user %>
+<h2>Edit Account</h2>
 
-  <%= form_for @user do |f| %>
-    <div class="auth-form__input-wrapper">
-      <div class="text-input">
-        <%= f.label :email, "#{t("spree.email")}:" %>
-        <%= f.email_field :email %>
-      </div>
+<%= form_for @user, url: user_path(@user), method: :put do |f| %>
+  <!-- Existing form fields -->
+
+  <!-- Add the input fields for the bill address -->
+  <%= f.fields_for :bill_address_attributes do |address_fields| %>
+
+    <div class="field">
+      <%= address_fields.label :name, 'Name' %>
+      <%= address_fields.text_field :name, value: @bill_address&.name %>
     </div>
 
-    <div class="auth-form__input-wrapper">
-      <div class="text-input">
-        <%= f.label :password, "#{t("spree.password")}:" %>
-        <%= f.password_field :password %>
-      </div>
+    <div class="field">
+      <%= address_fields.label :address1, 'Address1' %>
+      <%= address_fields.text_field :address1, value: @bill_address&.address1 %>
     </div>
 
-    <div class="auth-form__input-wrapper">
-      <div class="text-input">
-        <%= f.label :password_confirmation, "#{t("spree.confirm_password")}:" %>
-        <%= f.password_field :password_confirmation %>
-      </div>
+    <div class="field">
+      <%= address_fields.label :address2, 'Address2' %>
+      <%= address_fields.text_field :address2, value: @bill_address&.address2 %>
+    </div>
+    
+    <div class="field">
+      <%= address_fields.label :zipcode, 'zipcode' %>
+      <%= address_fields.text_field :zipcode, value: @bill_address&.zipcode %>
     </div>
 
-    <div class="auth-form__input-wrapper">
-      <%= f.button t("spree.update"), name: :commit, class: 'button-primary button-primary--full-width' %>
+    <div class="field">
+      <%= address_fields.label :state, 'state' %>
+      
+      <%= address_fields.text_field :state, value: @bill_address&.state %>
     </div>
+
+    <div class="field">
+      <%= address_fields.label :phone, 'phone' %>
+      <%= address_fields.text_field :phone, value: @bill_address&.phone %>
+    </div>
+
   <% end %>
-</article>
+
+  <%= f.submit 'Update Account' %>
+<% end %>

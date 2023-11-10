@@ -25,9 +25,17 @@
 
     <div class="cart-item__quantity">
       <div class="text-input">
-        <%= item_form.text_field :quantity, type: 'number', min: 0, max: 100 %>
+        <%= item_form.number_field :quantity,
+          min: 0,
+          max: 99,
+          step: 1,
+          maxlength: 2,
+          pattern: '\d{1,2}',
+          title: 'Please enter a number between 0 and 99',
+          inputmode: 'numeric' %>
       </div>
     </div>
+
 
 
     <div class="cart-item__price">

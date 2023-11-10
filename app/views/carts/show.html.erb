@@ -13,6 +13,20 @@
       <%= render 'carts/cart_header', order_form: order_form %>
       <%= render 'shared/error_messages', target: order %>
       <%= render 'carts/cart_items', order_form: order_form %>
+    <% end %>
+
+  <% end %>
+
+
+   <% if @order.line_items.empty? %>
+    <%= render 'carts/cart_empty' %>
+  <% else %>
+    <%= form_for @order, url: cart_path, html: {
+      id: 'update-cart',
+      'data-cart-page-target': 'form',
+      'data-action': 'submit->cart-page#disableUpdateButton'
+    } do |order_form| %>
+      <% order = order_form.object %>
       <%= render 'carts/cart_footer', order_form: order_form %>
     <% end %>
 

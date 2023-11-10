@@ -7,7 +7,7 @@ class CartsController < StoreController
 
   before_action :store_guest_token
   before_action :assign_order, only: :update
-  # note: do not lock the #show action because that's where we redirect when we fail to acquire a lock
+
   around_action :lock_order, only: :update
 
   # Shows the current incomplete order from the session

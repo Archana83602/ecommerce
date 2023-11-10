@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class UsersController < StoreController
   skip_before_action :set_current_order, only: :show, raise: false
   prepend_before_action :authorize_actions, only: :new
@@ -31,18 +30,25 @@ class UsersController < StoreController
 
   def update
     load_object
+
+    # Check if there are address parameters in the request
+    if params[:user][:bill_address_attributes].present?
+      update_address_name
+    end
+
     if @user.update(user_params)
       spree_current_user.reload
       redirect_url = account_url
 
       if params[:user][:password].present?
-        # this logic needed b/c devise wants to log us out after password changes
+        # this logic needed b/c devise wants to log after password changes
         if Spree::Auth::Config[:signout_after_password_change]
           redirect_url = login_url
         else
           bypass_sign_in(@user)
         end
       end
+
       redirect_to redirect_url, notice: I18n.t('spree.account_updated')
     else
       render :edit
@@ -64,6 +70,20 @@ class UsersController < StoreController
   def authorize_actions
     authorize! params[:action].to_sym, Spree::User.new
   end
+
+  def update_address_name
+    if @user.bill_address
+      new_bill_address = Spree::Address.new(@user.bill_address.attributes)
+      address_params = params[:user][:bill_address_attributes].permit(:name, :address1, :address2, :city, :zipcode, :phone)
+      # Assign other attributes
+      new_bill_address.assign_attributes(address_params)
+  
+      # Assign the new address to the user
+      @user.bill_address = new_bill_address
+    end
+  end
+  
+
 
   def accurate_title
     I18n.t('spree.my_account')

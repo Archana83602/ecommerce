@@ -1,9 +1,8 @@
-# frozen_string_literal: true
+#frozen_string_literal: true
 
 RSpec.describe UserMailer, type: :mailer do
   let!(:store) { create(:store) }
   let(:user) { create(:user) }
-
   before do
     user = create(:user)
     described_class.reset_password_instructions(user, 'token goes here').deliver_now

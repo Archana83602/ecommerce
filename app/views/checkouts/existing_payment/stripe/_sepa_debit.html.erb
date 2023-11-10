@@ -1,0 +1,3 @@
+<% sepa_debit = stripe_payment_method.sepa_debit %>
+🏦 <%= sepa_debit.bank_code %> / <%= sepa_debit.branch_code %><br>
+IBAN: **** **** **** **** **** <%= sepa_debit.last4 %>

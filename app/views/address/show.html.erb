@@ -1,0 +1,22 @@
+<!-- app/views/users/show.html.erb -->
+
+<div class="account-summary">
+  <div class="account-summary__profile">
+    <h2>Profile</h2>
+    <p>Email: <%= @user.email %></p>
+
+    <% if @address.present? %>
+      <h3>Address</h3>
+
+      <!-- Display address fields here -->
+      <p>Firstname: <%= @address.firstname %></p>
+      <p>Lastname: <%= @address.lastname %></p>
+      <!-- Add other fields as needed -->
+    <% else %>
+      <p>No address available</p>
+    <% end %>
+  </div>
+
+  <!-- Add other sections for additional addresses or user details -->
+
+</div>

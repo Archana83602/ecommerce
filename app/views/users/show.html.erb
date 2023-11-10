@@ -1,8 +1,8 @@
 <div class="account-summary">
   <div class="account-summary__profile">
     <h2>Profile</h2>
-    <p>Email:<%= @user.email %></p>
-     <% if @bill_address.present? %>
+      <p><%= @user.email %> (<%= link_to I18n.t('spree.edit'), edit_account_path %>)</p>
+    <% if @bill_address.present? %>
     <p>Name: <%= @bill_address.name %></p>
     <p>Address1: <%= @bill_address.address1 %></p>
     <p>Address2: <%= @bill_address.address2 %></p>

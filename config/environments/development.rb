@@ -58,19 +58,19 @@ Rails.application.configure do
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
-  config.hosts << "dd1c-112-196-113-2.ngrok-free.app"
+  config.hosts << "1605-112-196-113-2.ngrok-free.app"
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
+  config.action_mailer.default_url_options = { host: '192.180.2.134', port: 3000 }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
-    domain:               'c180-112-196-113-2.ngrok-free.app',
-    user_name:            'harpreetvallah2@gmail.com',
-    password:             'fvjfwycrflgltfgz',
+    user_name:            'eehappy69@gmail.com',
+    password:             'tahgoqaterbxqenc',
     authentication:       'plain',
     enable_starttls_auto: true,
-   }
+  }
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 

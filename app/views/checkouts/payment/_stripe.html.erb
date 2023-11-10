@@ -56,12 +56,14 @@
   data-solidus-stripe-payment-submit-selector-value="#checkout_form_payment [type='submit']"
   data-action="submit@window->solidus-stripe-payment#handleSubmit"
 >
-  <input
-    type="hidden"
-    name="payment_source[<%= payment_method.id %>][stripe_payment_method_id]"
-    value=""
-    data-solidus-stripe-payment-target="paymentMethodInput"
-  >
+<input
+  type="hidden"
+  name="payment_source[<%= payment_method.id %>][stripe_payment_method_id]"
+  value=""
+  data-solidus-stripe-payment-target="paymentMethodInput"
+  data-description="Payment for goods and services" 
+>
+
 
   <div data-solidus-stripe-payment-target="paymentElement">
     <!-- Elements will create form elements here -->

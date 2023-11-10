@@ -28,6 +28,9 @@
 #
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  spree:
+    order_cancelled_successfully: "Order has been cancelled successfully."
+    order_returned_successfully: "The order return has been processed successfully."
+
+
