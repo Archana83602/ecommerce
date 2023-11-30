@@ -15,8 +15,13 @@
     </legend>
 
     <%= render 'order_details', order: @order %>
-    	
-    <%= link_to 'Cancel Order', cancel_order_order_path(@order), method: :post, data: { confirm: 'Are you sure you want to cancel this order?' } %>
+    <% if @order.shipment_state == 'ready' %>
+      <%= link_to 'Cancel Order', cancel_order_order_path(@order), method: :post, data: { confirm: 'Are you sure you want to cancel this order?' } %>
+    <% end %>  
+    <% if @order.shipment_state == 'shipped' %>
+      <%= link_to 'Return Order', return_order_order_path(@order), method: :post, data: { confirm: 'Are you sure you want to return this order?' } %>
+    <% end %>
+
   </fieldset>
 
   <div class="order-page__actions">

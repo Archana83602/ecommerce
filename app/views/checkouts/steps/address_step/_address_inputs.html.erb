@@ -108,28 +108,30 @@
   ) %>
 </noscript>
   <% end %>
-  <div class="text-input">
-    <%= form.label :zipcode, "#{I18n.t("spree.zip")}:" %>
-    <%= form.text_field :zipcode,
-      required: address.require_zipcode?,
-      autocomplete: "#{address_type} postal-code",
-      maxlength: 6,
-      pattern: '\d{6}',
-      title: 'Please enter a 6-digit ZIP code'
-    %>
-  </div>
+ <div class="text-input">
+  <%= form.label :zipcode, "#{I18n.t("spree.zip")}:" %>
+  <%= form.text_field :zipcode,
+    required: address.require_zipcode?,
+    autocomplete: "#{address_type} postal-code",
+    maxlength: 6,
+    pattern: '\d{6}',
+    title: 'Please enter a 6-digit ZIP code',
+    id: 'zipcode-input' # Add an ID to the input field for easier selection in JavaScript
+  %>
+  <div id="zipcode-error-message" style="color: red;"></div> <!-- Error message container -->
+</div>
 
   <div class="text-input">
-    <%= form.label :phone, "#{I18n.t("spree.phone")}:" %>
+  <%= form.label :phone, "#{I18n.t("spree.phone")}:" %>
 
-    <%= form.telephone_field :phone,
-      required: address.require_phone?,
-      autocomplete: "#{address_type} home tel",
-      pattern: '\d{10}',
-      title: 'Please enter a 10-digit phone number'
-    %>
-  </div>
-
+  <%= form.telephone_field :phone,
+    required: address.require_phone?,
+    autocomplete: "#{address_type} home tel",
+    title: 'Please enter a 10-digit phone number',
+    id: 'phone-input' # Add an ID to the input field for easier selection in JavaScript
+  %>
+</div>
+  <div id="phone-error-message" style="color: red;"></div> <!-- Error message container -->
 
 
   <% if Spree::Config[:alternative_shipping_phone] %>
@@ -140,3 +142,72 @@
   <% end %>
 </div>
 
+<!-- Include jQuery (if not already included) -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    // Get the phone input and error message elements
+    var phoneInput = document.getElementById('phone-input');
+    var errorMessage = document.getElementById('phone-error-message');
+
+    // Function to validate and limit phone number length
+    function validatePhoneNumber() {
+      // Remove non-numeric characters from the input
+      var sanitizedInput = phoneInput.value.replace(/\D/g, '');
+
+      // Update the input value with the sanitized version
+      phoneInput.value = sanitizedInput;
+
+      // Check if the sanitized input has more than 10 digits
+      if (sanitizedInput.length > 10) {
+        // Truncate the input to 10 digits
+        phoneInput.value = sanitizedInput.slice(0, 10);
+      }
+
+      // Check if the sanitized input has exactly 10 digits
+      if (sanitizedInput.length === 10) {
+        // Valid phone number
+        errorMessage.textContent = ''; // Clear error message
+      } else {
+        // Invalid phone number
+        errorMessage.textContent = 'Please enter a valid 10-digit phone number';
+      }
+    }
+
+    // Attach the event listener to the phone input
+    phoneInput.addEventListener('input', validatePhoneNumber);
+
+
+    var zipcodeInput = document.getElementById('zipcode-input');
+    var errorMessage = document.getElementById('zipcode-error-message');
+
+    // Function to validate and limit ZIP code length
+    function validateZipcode() {
+      // Remove non-numeric characters from the input
+      var sanitizedInput = zipcodeInput.value.replace(/\D/g, '');
+
+      // Update the input value with the sanitized version
+      zipcodeInput.value = sanitizedInput;
+
+      // Check if the sanitized input has more than 6 digits
+      if (sanitizedInput.length > 6) {
+        // Truncate the input to 6 digits
+        zipcodeInput.value = sanitizedInput.slice(0, 6);
+      }
+
+      // Check if the sanitized input has exactly 6 digits
+      if (sanitizedInput.length === 6) {
+        // Valid ZIP code
+        errorMessage.textContent = ''; // Clear error message
+      } else {
+        // Invalid ZIP code
+        errorMessage.textContent = 'Please enter a valid 6-digit ZIP code';
+      }
+    }
+
+    // Attach the event listener to the ZIP code input
+    zipcodeInput.addEventListener('input', validateZipcode);
+  });
+  
+</script>

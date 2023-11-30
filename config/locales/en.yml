@@ -31,3 +31,7 @@
 en:
   spree:
     order_cancelled_successfully: "Order has been cancelled successfully."
+    order_returned_successfully: "The order return has been processed successfully."
+    order_return_time_limit_exceeded: "The return period for this order has expired."
+    item_removed_from_cart: "Item removed successfully."
+    failed_to_remove_item: "Item cannot be removed."

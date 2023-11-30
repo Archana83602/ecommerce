@@ -1,0 +1,114 @@
+<style>
+  .field {
+    margin-bottom: 1rem;
+  }
+.btn.btn-primary{
+  background: #3c76f0;
+  border: 0;
+  border-radius: 2px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  height: 3.8rem;
+  padding: 0 2rem;
+  white-space: nowrap;
+}
+#address_country_id{
+  width:100%;
+}
+#address_city, #address_phone, #address_zipcode, #address_address2, #address_address1, #address_name{
+   border: solid 1px #ddd;
+  border-radius: 1px;
+  display: block;
+  font-size: 1.4rem;
+  height: 3.8rem;
+  padding: 0 1rem;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+</style>
+<div  class = "address-container" style="margin: 0 auto;
+  max-width: 35rem;
+  padding: 8rem 2rem;">
+  <h1>Edit Address</h1>
+
+<%= form_for(@address, url: address_path(@address), method: :patch) do |f| %>
+
+    <div class="field">
+      <%= f.label :name, 'Name :' %>
+      <%= f.text_field :name %>
+    </div>
+
+    <div class="field">
+      <%= f.label :address1, 'Address1 :' %>
+      <%= f.text_field :address1 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :address2, 'Address2 :' %>
+      <%= f.text_field :address2 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :zipcode, 'Zipcode :' %>
+      <%= f.text_field :zipcode %>
+    </div>
+
+    <div class="field">
+      <%= f.label :phone, 'Phone :' %>
+      <%= f.text_field :phone %>
+    </div>
+
+  
+<div class="field">
+    <%= f.label :city, "#{I18n.t("spree.city")} :" %>
+    <%= f.text_field :city,
+     required: true,
+
+     maxlength: 20,
+     title: 'Provided street address is too long' %>
+  </div>
+
+      <div class="field">
+      <%= f.label :country_id, 'Country :' %>
+      <%= f.collection_select :country_id, Spree::Country.all, :id, :name, prompt: 'Select a country' %>
+    </div>
+
+    
+  <div class="field" id="state-field" style="display: none;">
+    <%= f.label :state_id, 'State :' %>
+    <br>
+    <%= f.collection_select :state_id, [], :id, :name, prompt: 'Select a state' %>
+  </div>
+
+    <%= f.submit 'Update Address',class:'btn btn-primary' %>
+  <% end %>
+  </div>
+<script>
+  // Add an event listener to the country dropdown to fetch and populate states
+  document.addEventListener('DOMContentLoaded', function () {
+    var countryDropdown = document.getElementById('address_country_id');
+    var stateField = document.getElementById('state-field');
+
+    countryDropdown.addEventListener('change', function () {
+      var countryId = countryDropdown.value;
+
+      // Fetch states for the selected country using AJAX
+      fetch('/api/states?country_id=' + countryId)
+        .then(response => response.json())
+        .then(data => {
+          // Populate the state dropdown with the fetched states
+          var stateDropdown = document.getElementById('address_state_id');
+          stateDropdown.innerHTML = '<option value="">Select a state</option>';
+          data.states.forEach(function (state) {
+            stateDropdown.innerHTML += '<option value="' + state.id + '">' + state.name + '</option>';
+          });
+
+          // Show the state field
+          stateField.style.display = 'block';
+        })
+        .catch(error => console.error('Error fetching states:', error));
+    });
+  });
+</script>

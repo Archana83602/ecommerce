@@ -39,6 +39,29 @@ class CartLineItemsController < StoreController
     end
   end
 
+  def destroy
+    @order = current_order
+    @line_item = @order.line_items.find(params[:id])
+
+    if @line_item.destroy
+      # Update order's cost_price by reducing the value of the deleted item
+      @order.update(item_total: @order.item_total - @line_item.cost_price)
+      @order.update( total: @order.total - @line_item.cost_price * @line_item.quantity, item_count: @order.item_count-@line_item.quantity)
+
+      # If there are no items left in the order, delete the order
+      @order.destroy if @order.line_items.empty?
+
+      flash[:success] = t('spree.item_removed_from_cart')
+    else
+      flash[:error] = t('spree.failed_to_remove_item')
+    end
+
+    respond_to do |format|
+      format.html { redirect_to cart_path }
+    end
+  end
+  
+
   private
 
   def store_guest_token

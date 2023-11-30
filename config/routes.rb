@@ -15,10 +15,8 @@ Rails.application.routes.draw do
     path_names: { sign_out: 'logout' }
   })
 
-  resources :users, only: [:edit, :update] 
-  get '/editaddress', to: 'users#editaddress'
-  patch '/updateaddress', to: 'users#updateaddress'
-
+  resources :users, only: [:show, :edit, :update] 
+  
 
   devise_scope :spree_user do
     get '/login', to: 'user_sessions#new', as: :login
@@ -33,16 +31,25 @@ Rails.application.routes.draw do
     get '/confirm', to: 'user_confirmations#show', as: :confirmation if Spree::Auth::Config[:confirmable]
   end
 
+  resources :addresses, only: [:edit, :update, :new, :create, :index, :destroy] do
+    member do
+      post 'set_default'
+    end
+  end
+
+  
   resource :account, controller: 'users'
 
   resources :products, only: [:index, :show]
 
   resources :autocomplete_results, only: :index
 
-  resources :cart_line_items, only: :create
+  resources :cart_line_items, only: [ :create, :destroy]
+
   get '/orderhistory', to: 'users#orderhistory'
  
-
+  get '/contact_us', to: 'contact_us#new', as: 'contact_us'
+  post '/contact_us', to: 'contact_us#create'
 
   get '/locale/set', to: 'locale#set'
   post '/locale/set', to: 'locale#set', as: :select_locale
@@ -61,12 +68,14 @@ Rails.application.routes.draw do
     resources :coupon_codes, only: :create
     member do
       post 'cancel_order'
-      # post 'initiate_return'
+      post 'return_order'
     end
   end
 
   resource :cart, only: [:show, :update] do
     put 'empty'
+    # delete :removeitem
+
   end
 
   # route globbing for pretty nested taxon and product paths

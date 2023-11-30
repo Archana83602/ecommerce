@@ -26,7 +26,29 @@ class OrdersController < StoreController
     end
   end
 
+  def return_order
+    @order = Spree::Order.find_by!(number: params[:id])
+    print(@order)
+    order_attributes = @order.attributes
+    # Print more attributes as needed
+    puts "Order Attributes: #{order_attributes}"
+    if @order.can_cancel? && order_placed_within_last_week?
+      
+      @order.cancel!
+      @order.update(state: 'return', shipment_state:'ready', canceled_at: Time.current)
+      flash[:notice] = t('spree.order_returned_successfully')
+    else
+      flash[:error] = t('spree.order_return_time_limit_exceeded')
+    end
+    redirect_to order_path(@order)
+  end
+
+  
+
   private
+  def order_placed_within_last_week?
+    @order.created_at >= 1.week.ago
+  end
 
   def accurate_title
     t('spree.order_number', number: @order.number)
@@ -35,4 +57,7 @@ class OrdersController < StoreController
   def store_guest_token
     cookies.permanent.signed[:guest_token] = params[:token] if params[:token]
   end
+
+ 
+
 end

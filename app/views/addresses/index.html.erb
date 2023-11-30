@@ -1,0 +1,136 @@
+<style>
+  .addresses-container {
+    margin: -50px 0px 0px 0px;
+    padding: 8rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+   .addresses-container-second {
+    margin: 0px 175px 0px 86px;
+    padding: 3rem 8rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  h1 {
+    clear: both; /* Add this property to ensure the h1 tag starts on a new line */
+  }
+
+  .card {
+    line-height: 1.2;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+    width: 320px;
+    height: 266px;
+    margin: 18px 18px 15px 18px;
+  }
+
+  .card.dashed {
+    border-style: dashed;
+    border-color: #C7C7C7;
+    
+  }
+
+  .card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .card-container.image {
+    padding: 5px 3px 2px 3px;
+  }
+
+  .card-text {
+    color: grey;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .default-address {
+    font-size: 12px;
+  }
+
+  .text {
+    padding: 10px;
+  }
+
+  .text h2 {
+    font-size: 15px;
+    text-align: left !important;
+  }
+ .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .row .card {
+    margin-bottom: 15px;
+  }
+
+  a:hover {
+  cursor: pointer;
+  color: #C7511F;
+  }
+
+</style>
+
+<div class="addresses-container">
+
+  <div class="addresses-container-second">
+    <!-- Always show "Add Address" card as the first card -->
+    
+  <div class="header">
+    <h1>Your Addresses:</h1>
+  </div>
+    <div class="row">
+      <div class="card dashed card-container">
+        <%= link_to new_address_path do %>
+        <div class="image">
+          <%= image_tag('plus.png', width: '50', height: '50') %>
+        </div>
+        <div class="text card-text">
+          <p>Add Address</p>
+        </div>
+        <% end %>
+      </div>
+      <% @addresses.each_with_index do |a, index| %>
+        <% u = Spree::UserAddress.find_by(address_id: a.id) %>
+        <div class="card">
+          <% if u.default || u.default_billing %>
+            <p class="default-address">Default Address</p>
+          <% end %>
+          <div class="text">
+            <h2><%= a.name %></h2>
+            <p style="font-size:14px;"><%= a.address1 %></p>
+            <p style="font-size:14px;"><%= a.address2 %>, <%= a.zipcode %></p>
+            <p style="font-size:14px;"><%= a.phone %></p>
+            <p style="font-size:14px;"><%= a.city %> 
+            <%= a.state_name %></p>
+            <div class="links" >
+              <%= link_to "Edit", edit_address_path(a) %> 
+              <% unless u.default || u.default_billing %>
+                | <%= link_to "Remove", address_path(a), method: :delete, data: { confirm: 'Are you sure?' } %>
+                | <%= link_to "Set as Default", set_default_address_path(a), method: :post %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <% if index == 1 %>
+          <!-- Close the first row after the second card -->
+        </div>
+        <!-- Start a new row for the next set of three cards -->
+        <div class="row">
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

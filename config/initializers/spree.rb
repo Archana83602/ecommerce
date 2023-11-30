@@ -1,14 +1,29 @@
 # Configure Solidus Preferences
 # See http://docs.solidus.io/Spree/AppConfiguration.html for details
+# ...
+Rails.application.config.to_prepare do
+  ::Spree::ReturnItem.refund_amount_calculator = AmazingStore::Calculator::Returns::WithPenalty
+end
+# ...
+# ...
+Rails.application.config.to_prepare do
+  ::Spree::ReturnItem.refund_amount_calculator = AmazingStore::Calculator::Returns::WithPenalty
+  ::Spree::ReturnItem::EligibilityValidator::Default.permitted_eligibility_validators.delete(
+    ::Spree::ReturnItem::EligibilityValidator::RMARequired
+    
+  )
+end
 
-# Solidus version defaults for preferences that are not overridden
-# Spree::auth::Config[:confirmable] = true
+
+Spree::Auth::Config[:confirmable] = true
+
 Spree.load_defaults '4.2.3'
 
 Spree.config do |config|
   # Core:
   # Default currency for new sites
   config.currency = "USD"
+  config.carton_shipped_email_class = 'AmazingStore::CartonMailer'
 
   # Uncomment to stop tracking inventory levels in the application
   # config.track_inventory_levels = false
@@ -32,7 +47,7 @@ Spree.config do |config|
   # Admin:
 
   # Custom logo for the admin
-  # config.admin_interface_logo = "logo/solidus.svg"
+  config.admin_interface_logo = "logo/chicmic-logo.png"
 
   # Gateway credentials can be configured statically here and referenced from
   # the admin. They can also be fully configured from the admin.
@@ -66,7 +81,7 @@ Spree::Backend::Config.configure do |config|
   # )
 
   # Custom frontend product path
-  #
+  
   # config.frontend_product_path = ->(template_context, product) {
   #   template_context.spree.product_path(product)
   # }

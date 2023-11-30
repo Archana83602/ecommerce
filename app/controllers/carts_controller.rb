@@ -48,6 +48,15 @@ class CartsController < StoreController
     redirect_to cart_path
   end
 
+
+  # def removeitem
+  #   @order = current_order
+  #   @line_item = @order.line_items.find(params[:id])
+  #   @line_item.destroy
+  #   head :ok
+  # end
+
+
   def ensure_sufficient_stock_lines
     @order = current_order
     if @order.insufficient_stock_lines.present?
@@ -56,7 +65,7 @@ class CartsController < StoreController
     end
   end
 
-
+  
   private
 
   def accurate_title

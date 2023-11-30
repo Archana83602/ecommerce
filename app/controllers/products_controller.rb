@@ -26,6 +26,13 @@ class ProductsController < StoreController
 
     @product_properties = @product.product_properties.includes(:property)
     @taxon = Spree::Taxon.find(params[:taxon_id]) if params[:taxon_id]
+
+  end
+
+  def ensure_sufficient_stock_lines
+    @variants = @product.variants.first
+    # Step 1: Get the maximum stock value for the variant
+    @max_stock = @variants.stock_items.sum(:count_on_hand)
   end
 
   private

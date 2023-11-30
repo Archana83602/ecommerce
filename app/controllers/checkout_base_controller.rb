@@ -20,8 +20,25 @@ class CheckoutBaseController < StoreController
 
   def load_order
     @order = current_order
-    redirect_to(cart_path) && return unless @order
+    puts "Order after current_order: #{@order.inspect}"
+  
+    if @order.nil?
+      puts "Order is nil. Referrer: #{request.referer}"
+      
+      if request.referer == account_url
+        puts "Redirecting to addresses_path"
+        redirect_to addresses_path
+      else
+        puts "Redirecting to cart_path"
+        redirect_to cart_path
+      end
+  
+      return
+    end
   end
+  
+  
+  
 
   # Allow the customer to only go back or stay on the current state
   # when trying to change it via params[:state]. It's not allowed to
@@ -35,11 +52,17 @@ class CheckoutBaseController < StoreController
   end
 
   def ensure_checkout_allowed
+    return if addresses_controller?
+  
     unless @order.checkout_allowed?
       redirect_to cart_path
     end
   end
-
+  
+  def addresses_controller?
+    controller_name == 'addresses'
+  end
+  
   def ensure_order_not_completed
     redirect_to cart_path if @order.completed?
   end

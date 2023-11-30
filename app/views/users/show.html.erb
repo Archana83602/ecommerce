@@ -4,22 +4,24 @@
     <h2><%#= I18n.t('spree.email') %></h2>
     <p><%#= @user.email %> <%#= link_to I18n.t('spree.edit'), edit_account_path %></p>
   </div>
-
-  <div class="card-container" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px;">
+  <div class="card-container" style="display: flex; flex-wrap: wrap; justify-content: space-between; ">
+    <%= link_to '/orderhistory' do %>
+    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px;height: 160px;
+  width: 518.4px;">
       <div class="image" style="padding: 10px 3px 2px 3px; flex: 1;">
-<%= link_to '/orderhistory' do %>
       <%= image_tag('box.png', width: '130', height: '90') %>
-    <% end %>      </div>
+     </div>
       <div class="text" style="padding: 10px 3px 2px 3px; flex: 2;">
         <h2>Your Orders</h2>
         <p>Track, return or buy things again</p>
       </div>
     </div>
+    <%end%>
 
-    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px;">
+   <%= link_to addresses_path  do %>
+    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px;height: 160px;
+  width: 518.4px;">
       <div class="image" style="padding: 5px 3px 2px 3px; flex: 1;">
-      <%= link_to I18n.t('spree.edit'), edit_account_path %>
         <%= image_tag('locate.png', width: '65', height: '90') %>
       </div>
       <div class="text" style="padding: 5px 3px 2px 3px; flex: 2;">
@@ -27,8 +29,11 @@
         <p>Edit your address.</p>
       </div>
     </div>
+  <%end%>
 
-    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px; margin-top: 25px;">
+   <%= link_to contact_us_path do %>
+    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px; margin-top: 25px;height: 160px;
+  width: 518.4px;">
       <div class="image" style="padding: 5px 3px 2px 3px; flex: 1;">
         <%= image_tag('contact.png', width: '75', height: '90') %>
       </div>
@@ -37,17 +42,20 @@
         <p>Contact customer support.</p>
       </div>
     </div>
+   <%end%>
 
-    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px;margin-top: 25px;">
-      <div class="image" style="padding: 5px 3px 2px 3px; flex: 1;">
    <%= link_to edit_account_path do %>
-      <%= image_tag('lock.png', width: '75', height: '90') %>
-    <% end %>      </div>
+    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); width: 48%; display: flex; align-items: center; text-align: center; margin-bottom: 10px;margin-top: 25px;height: 160px;
+  width: 518.4px;">
+      <div class="image" style="padding: 5px 3px 2px 3px; flex: 1;">
+        <%= image_tag('lock.png', width: '75', height: '90') %>
+      </div>
       <div class="text" style="padding: 5px 3px 2px 3px; flex: 2;">
         <h2>Reset Password</h2>
         <p>Change your account password.</p>
       </div>
     </div>
+    <% end %>  
 
     <!-- Add more card structures for additional pairs if needed -->
 
@@ -59,3 +67,6 @@
     <%= button_tag(t("spree.logout"), class: 'button-primary') %>
   <% end %>
 </div>
+
+
+

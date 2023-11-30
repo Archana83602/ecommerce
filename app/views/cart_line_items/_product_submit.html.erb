@@ -1,20 +1,53 @@
+<style>
+  .text-input {
+    display: flex;
+    align-items: center;
+  }
+
+  .value-button {
+    display: inline-block;
+    background-color: #007BFF; /* Set your desired background color */
+    color: #fff; /* Set your desired text color */
+    padding: 8px 12px; /* Adjust padding as needed */
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    margin: 0 4px; /* Adjust margin as needed */
+  }
+
+  #number {
+    width: 40px; /* Set your desired width for the text_field */
+    text-align: center;
+    background-color: white; /* Set your desired background color */
+    border: 1px solid #ccc; /* Set your desired border color */
+    padding: 6px 8px; /* Adjust padding as needed */
+  }
+</style>
+
+
 <div class="product-submit">
   <%= render 'cart_line_items/product_availability', product: product %>
 
   <div class="horizontal-input-group">
     <div class="horizontal-input-group__input">
       <div class="text-input">
+
+        <% product = Spree::Product.find_by(name: product.name) %>
+        <% variant = Spree::Variant.find_by(product_id: product.id) %>
+        <% stock = Spree::StockItem.find_by(variant_id: variant.id) %>
+        <% out_of_stock = stock.count_on_hand%>
+        
         <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
-        <%= text_field_tag :quantity, 1,  min: 1  ,id: 'number', readonly: true%>
+        <%= text_field_tag :quantity, 1,  min: 1 , max: @max_stock ,id: 'number', readonly: true%>
         <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
       </div>
     </div>
-    <div class="horizontal-input-group__action">
+    <div class="horizontal-input-group__action" style="margin-left: 50px;">
       <%= button_tag(
         t('spree.add_to_cart'),
         class: 'button-primary',
-        id: 'add-to-cart-button'
-      ) %>
+        id: 'add-to-cart-button' 
+      ) %> 
     </div>
   </div>
 </div>
@@ -29,12 +62,24 @@
     });
   });
 
-function increaseValue() {
+  function increaseValue() {
   var value = parseInt(document.getElementById('number').value, 10);
   value = isNaN(value) ? 0 : value;
+
+  // Check if the product is out of stock
+  var total = <%= out_of_stock %>;
+  console.log(total);
+
+  // Check if the current value is less than or equal to the total available quantity
+  if (value >= total) {
+    alert('Cannot increase quantity.Product is out of stock.');
+    return;
+  }
+
   value++;
   document.getElementById('number').value = value;
 }
+
 
 function decreaseValue() {
   var value = parseInt(document.getElementById('number').value, 10);

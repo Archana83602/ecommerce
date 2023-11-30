@@ -1,3 +1,31 @@
+<style>
+  .cart-item__quantity {
+    display: flex;
+    align-items: center;
+  }
+
+  .text-input {
+    display: flex;
+    align-items: center;
+  }
+
+  .value-button {
+    display: inline-block;
+    background-color: #007BFF; /* Set your desired background color */
+    color: #fff; /* Set your desired text color */
+    padding: 8px 12px; /* Adjust padding as needed */
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    margin: 0 4px; /* Adjust margin as needed */
+  }
+
+  #number {
+    width: 40px; /* Set your desired width for the text_field */
+    text-align: center;
+  }
+</style>
+
 <% variant = line_item.variant %>
 
 <%= order_form.fields_for :line_items, line_item do |item_form| %>
@@ -25,9 +53,9 @@
 
     <div class="cart-item__quantity">
       <div class="text-input">
-        <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
-        <%= item_form.text_field :quantity, min: 0, id: 'number', readonly: true %>
-        <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+        <div class="value-button" id="decrease<%= line_item.id %>" onclick="decreaseValue(<%= line_item.id %>)" value="Decrease Value">-</div>
+          <%= item_form.text_field :quantity, min: 0, id: "number_#{line_item.id}", readonly: true, style: "width: 45px;" %>
+        <div class="value-button" id="increase<%= line_item.id %>" onclick="increaseValue(<%= line_item.id %>)" value="Increase Value">+</div>
       </div>
     </div>
     
@@ -46,7 +74,9 @@
     </div>
 
     <div class="cart-item__remove">
-      <%= order_form.submit(
+    <%= link_to '', cart_line_item_path(line_item), method: :delete, data: { turbo_confirm: t('spree.are_you_sure') }, class: "fa-solid fa-trash"%>
+
+      <%#= order_form.submit(
         'Remove',
         class: 'delete',
         id: "delete_#{dom_id(line_item)}",
@@ -58,40 +88,25 @@
     </div>
   </article>
 <% end %>
-<script>
-// function increaseValue() {
-//   var value = parseInt(document.getElementById('number').value, 10);
-//   value = isNaN(value) ? 0 : value;
-//   value++;
-//   document.getElementById('number').value = value;
-// }
 
-// function decreaseValue() {
-//   var value = parseInt(document.getElementById('number').value, 10);
-//   value = isNaN(value) ? 0 : value;
-//   value < 1 ? value = 1 : '';
-//   value--;
-//   document.getElementById('number').value = value;
-// }
-</script>
 <script type="text/javascript">
-   function increaseValue() {
-    var newValue = parseInt($('#number').val()) + 1;
-    var maxStock = <%= @order.line_items.first.variant.stock_items.sum(:count_on_hand) %>;
-
+  function increaseValue(lineItemId) {
+    var newValue = parseInt($('#number_' + lineItemId).val()) + 1;
+    // var maxStock = <%= @order.line_items.first.variant.stock_items.sum(:count_on_hand) %>;
+    var maxStock = <%= @order.line_items.find_by(id: line_item.id).variant.stock_items.sum(:count_on_hand) %>;
+  
     if (newValue <= maxStock) {
-      $('#number').val(newValue);
+      $('#number_' + lineItemId).val(newValue);
       submitCartForm();
     } else {
       alert('Not enough stock available.');
     }
   }
 
-
-  function decreaseValue() {
-    var newValue = parseInt($('#number').val()) - 1;
+  function decreaseValue(lineItemId) {
+    var newValue = parseInt($('#number_' + lineItemId).val()) - 1;
     if (newValue >= 0) {
-      $('#number').val(newValue);
+      $('#number_' + lineItemId).val(newValue);
       submitCartForm();
     }
   }
@@ -100,4 +115,3 @@
     $('#update-cart-button').click();
   }
 </script>
-

@@ -1,0 +1,54 @@
+<!-- app/views/contact_us/new.html.erb -->
+<style>
+.btn.btn-primary{
+  background: #3c76f0;
+  border: 0;
+  border-radius: 2px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  height: 3.8rem;
+  padding: 0 2rem;
+  white-space: nowrap;
+}
+
+#contact_email,#contact_name,#contact_message{
+  border: solid 1px #ddd;
+  border-radius: 1px;
+  display: block;
+  font-size: 1.4rem;
+  height: 3.8rem;
+  padding: 0 1rem;
+  width: 100%;
+  margin-bottom: 10px;
+}
+#contact_message {
+  height: 10.8rem;
+}
+</style>
+<div  class = "contact-container" style="margin: 0 auto;
+  max-width: 35rem;
+  padding: 8rem 2rem;">
+      <h1>Contact Us</h1>
+      <%= form_with(model: @contact, url: contact_us_path, method: :post) do |form| %>
+        <div class="field">
+          <%= form.label :name, 'Name: '  %><br>
+          <%= form.text_field :name %>
+        </div>
+
+        <div class="field">
+          <%= form.label :email, 'Email: '  %><br>
+          <%= form.email_field :email %>
+        </div>
+
+
+        <div class="field">
+          <%= form.label :message, 'Message: ' %><br>
+          <%= form.text_area :message %>
+        </div>
+
+
+        <%= form.submit 'Submit' ,class:'btn btn-primary'%>
+      <% end %>
+</div>
+
